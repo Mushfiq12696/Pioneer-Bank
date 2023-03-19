@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bank</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <section id="login-area">
+        <div class="login-section">
+            <h1>Wecome to MyBank-Calculator</h1>
+
+            <div class="input-area  submit-area ">
+                <h3>Log in</h3>
+                <input type="text " class="form-control " placeholder="Enter email ">
+                <br>
+                <input type="password " class="form-control " placeholder="Enter Password ">
+                <br>
+                <button onclick="loginBtn() " class="btn btn-success ">login</button>
+            </div>
+        </div>
+    </section>
+    <div id="transaction-area">
+        <button onclick="calculatorBtn()" class=" calculator-btn btn-success">Calculator</button>
+        <div class="row ">
+            <div class="col-md-4 ">
+                <div class="deposite status ">
+                    <h5>Deposite</h5>
+                    <h2>$
+                        <span id="currentDeposite">00</span></h2>
+                </div>
+            </div>
+            <div class=" col-md-4 ">
+                <div class="withdraw status">
+                    <h5>Withdraw</h5>
+                    <h2>$ <span id="currentWithdraw">00</span></h2>
+                </div>
+            </div>
+            <div class="col-md-4 ">
+                <div class="balance status">
+                    <h5>Balance</h5>
+                    <h2>$ <span id="currentBalance">1240</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-6 ">
+                <div class="submit-area ">
+                    <h4>
+                        Deposite
+                    </h4>
+                    <input id="depositeAmount" type="text" class="form-control" placeholder="$ you want to Deposite">
+                    <br>
+                    <button onclick=" getTransactionInput('depositeAmount', 'currentDeposite', true);" class="btn btn-success ">Deposite</button></div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="submit-area">
+                    <h4>
+                        Withdraw
+                    </h4>
+                    <input id="withdrawAmount" type="text" class="form-control " placeholder="$ you want to Withdraw ">
+                    <br>
+                    <button onclick="getTransactionInput('withdrawAmount', 'currentWithdraw', false);" class="btn btn-success ">Wthdraw</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- calculator-area -->
+    <div id="display-claculator">
+        <div class="container">
+            <div class="calculator">
+                <form>
+                    <div class="display">
+                        <input type="text" name="display">
+                    </div>
+                    <div>
+                        <input type="button" value="AC" onclick="display.value =''">
+                        <input type="button" value="DE" onclick="display.value = display.value.toString().slice(0,-1)">
+                        <input type="button" value="%" onclick="display.value +='%'">
+                        <input type="button" value="/" onclick="display.value +='/'">
+                    </div>
+                    <div>
+                        <input type="button" value="7" onclick="display.value +='7'">
+                        <input type="button" value="8" onclick="display.value +='8'">
+                        <input type="button" value="9" onclick="display.value +='9'">
+                        <input type="button" value="*" onclick="display.value +='*'">
+                    </div>
+                    <div>
+                        <input type="button" value="4" onclick="display.value +='4'">
+                        <input type="button" value="5" onclick="display.value +='5'">
+                        <input type="button" value="6" onclick="display.value +='6'">
+                        <input type="button" value="-" onclick="display.value +='-'">
+                    </div>
+                    <div>
+                        <input type="button" value="1" onclick="display.value +='1'">
+                        <input type="button" value="2" onclick="display.value +='2'">
+                        <input type="button" value="3" onclick="display.value +='3'">
+                        <input type="button" value="+" onclick="display.value +='+'">
+                    </div>
+                    <div>
+                        <input type="button" value="0" onclick="display.value +='0'">
+                        <input type="button" value="." onclick="display.value +='.'">
+                        <input type="button" value="=" onclick="display.value =eval(display.value)">
+                        <input type="button" value="Hide" onclick="hideCalculator()">
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function loginBtn() {
+            document.getElementById('login-area').style.display = 'none';
+            document.getElementById('transaction-area').style.display = 'block';
+        }
+        //transaction area activities
+
+        function getTransactionInput(transactionId, currentId, isCashIn) {
+            const transactionAmount = parseFloat(document.getElementById(transactionId).value);
+            let CurrentTransaction = parseFloat(document.getElementById(currentId).innerText);
+            let newTotalTransaction = transactionAmount + CurrentTransaction;
+            document.getElementById(currentId).innerText = newTotalTransaction;
+            document.getElementById(transactionId).value = '';
+            let currentBalance = parseFloat(document.getElementById('currentBalance').innerText);
+            let currentNewBalance = currentBalance;
+            if (isCashIn == true) {
+                currentNewBalance = currentBalance + transactionAmount;
+            }
+            if (isCashIn == false) {
+                currentNewBalance = currentBalance - transactionAmount;
+            }
+            document.getElementById('currentBalance').innerText = currentNewBalance;
+        }
+        //calculator areaactivities
+        function calculatorBtn() {
+            var displayCalculator = document.getElementById('display-claculator');
+            displayCalculator.style.display = 'block';
+            displayCalculator.style.alignContent = 'center';
+            var transactionDisplay = document.getElementById('transaction-area');
+            transactionDisplay.style.filter = 'blur(2px)';
+            // transactionDisplay.style.position = 'absolute';
+        }
+
+        function hideCalculator() {
+            document.getElementById('display-claculator').style.display = 'none';
+            document.getElementById('transaction-area').style.filter = 'blur(0px)';
+        }
+    </script>
+
+</body>
+
+</html>
